@@ -4,8 +4,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,9 +14,11 @@ public class RhythmActivity extends Activity {
 	private boolean active = false;
 	private Timer timer = null;
 	private long MILLISECONDS_IN_A_MINUTE = 60000L;
+	MediaPlayer player = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		player = MediaPlayer.create(getApplicationContext(), R.raw.woodblock);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rhythm);
 	}
@@ -41,19 +43,21 @@ public class RhythmActivity extends Activity {
 
 	private void startMetronome() {
 		active = true;
+		
 		long interval = getBpmInterval();
 		timer = new Timer("metronome", true);
 		timer.scheduleAtFixedRate(new TimerTask() {
 
 			@Override
 			public void run() {
-				Log.d("okay", "tock");
+				player.start();
 			}
 		}, 0, interval);
 	}
 
 	private void stopMetronome() {
 		active = false;
+		
 		if (timer != null) {
 			timer.cancel();
 		}
