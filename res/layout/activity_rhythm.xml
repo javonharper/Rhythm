@@ -11,7 +11,7 @@
     tools:context=".RhythmActivity" >
 
     <Button
-        android:id="@+id/increase_bpm_butotn"
+        android:id="@+id/increase_bpm_button"
         android:layout_width="fill_parent"
         android:layout_height="85dp"
         android:layout_weight="0.18"
