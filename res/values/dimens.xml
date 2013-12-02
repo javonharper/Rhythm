@@ -5,7 +5,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="start_stop_text_size">120sp</dimen>
     <dimen name="bpm_text_size">120sp</dimen>
-    <dimen name="change_bpm_text_size">40sp</dimen>
-    
+    <dimen name="change_bpm_text_size">120sp</dimen>
 
 </resources>

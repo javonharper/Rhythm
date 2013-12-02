@@ -10,11 +10,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".RhythmActivity" >
 
-    <TextView
-        android:id="@+id/increase_bpm_view"
+    <Button
+        android:id="@+id/increase_bpm_butotn"
         android:layout_width="fill_parent"
-        android:layout_height="91dp"
+        android:layout_height="85dp"
+        android:layout_weight="0.18"
         android:gravity="center_horizontal"
+        android:onClick="increaseBpm"
         android:text="@string/increase_bpm"
         android:textColor="@color/textColor"
         android:textSize="@dimen/change_bpm_text_size" />
@@ -22,26 +24,30 @@
     <TextView
         android:id="@+id/bpmView"
         android:layout_width="fill_parent"
-        android:layout_height="156dp"
+        android:layout_height="128dp"
         android:gravity="center_horizontal"
+        android:onClick="decreadeBpm"
         android:text="@string/initial_bpm"
         android:textColor="@color/textColor"
         android:textSize="@dimen/bpm_text_size" />
 
-    <TextView
-        android:id="@+id/decrease_bpm_view"
+    <Button
+        android:id="@+id/decrease_bpm_button"
         android:layout_width="fill_parent"
-        android:layout_height="111dp"
+        android:layout_height="65dp"
+        android:layout_weight="0.31"
         android:gravity="center_horizontal"
         android:text="@string/decrease_bpm"
         android:textColor="@color/textColor"
         android:textSize="@dimen/change_bpm_text_size" />
 
-    <TextView
-        android:id="@+id/start_stop_view"
+    <Button
+        android:id="@+id/start_stop_button"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="37dp"
+        android:layout_weight="0.58"
         android:gravity="bottom|center_horizontal"
+        android:onClick="toggleMetronome"
         android:text="@string/start"
         android:textColor="@color/textColor"
         android:textSize="@dimen/start_stop_text_size" />

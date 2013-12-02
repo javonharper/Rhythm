@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Rhythm</string>
-    <string name="increase_bpm">more</string>
-    <string name="decrease_bpm">less</string>
+    <string name="increase_bpm">▲</string>
+    <string name="decrease_bpm">▼</string>
     <string name="initial_bpm">80</string>
     <string name="start">Start</string>
     <string name="pause">Pause</string>
