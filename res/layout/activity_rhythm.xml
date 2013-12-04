@@ -13,10 +13,9 @@
     <TextView
         android:id="@+id/bpmView"
         android:layout_width="fill_parent"
-        android:layout_height="128dp"
-        android:layout_alignLeft="@+id/start_stop_button"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/increase_bpm_button"
         android:gravity="center_horizontal"
         android:text="@string/initial_bpm"
         android:textColor="@color/textColor"
@@ -25,10 +24,9 @@
     <Button
         android:id="@+id/decrease_bpm_button"
         android:layout_width="fill_parent"
-        android:layout_height="65dp"
-        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/start_stop_button"
         android:layout_below="@+id/bpmView"
-        android:layout_marginTop="37dp"
         android:background="@color/backgroundColor"
         android:gravity="center_horizontal"
         android:onClick="decreaseBpm"
@@ -37,31 +35,30 @@
         android:textSize="@dimen/change_bpm_text_size" />
 
     <Button
-        android:id="@+id/start_stop_button"
-        android:layout_width="fill_parent"
-        android:layout_height="37dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/decrease_bpm_button"
-        android:layout_marginTop="47dp"
-        android:background="@color/backgroundColor"
-        android:gravity="bottom|center_horizontal"
-        android:onClick="toggleMetronome"
-        android:text="@string/start"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/start_stop_text_size" />
-
-    <Button
         android:id="@+id/increase_bpm_button"
         android:layout_width="fill_parent"
-        android:layout_height="85dp"
-        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bpmView"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="34dp"
         android:background="@color/backgroundColor"
         android:gravity="center_horizontal"
         android:onClick="increaseBpm"
         android:text="@string/increase_bpm"
         android:textColor="@color/textColor"
         android:textSize="@dimen/change_bpm_text_size" />
+
+    <Button
+        android:id="@+id/start_stop_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bpmView"
+        android:layout_alignParentBottom="true"
+        android:background="@color/backgroundColor"
+        android:gravity="bottom|center_horizontal"
+        android:longClickable="false"
+        android:onClick="toggleMetronome"
+        android:text="@string/start"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/start_stop_text_size" />
 
 </RelativeLayout>
