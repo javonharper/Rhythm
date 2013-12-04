@@ -4,9 +4,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,12 +18,15 @@ public class RhythmActivity extends Activity {
 	private Timer timer = null;
 	private long MILLISECONDS_IN_A_MINUTE = 60000L;
 	MediaPlayer player = null;
+	Vibrator vibes;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		player = MediaPlayer.create(getApplicationContext(), R.raw.woodblock);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rhythm);
+		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 	}
 	
 	@Override
@@ -31,6 +36,7 @@ public class RhythmActivity extends Activity {
 	}
 
 	public void toggleMetronome(View view) {
+		vibrate();
 		if (active) {
 			changeButtonText("Start");
 			stopMetronome();
@@ -41,6 +47,7 @@ public class RhythmActivity extends Activity {
 	}
 
 	public void increaseBpm(View view) {
+		vibrate();
 		TextView bpmView = (TextView) findViewById(R.id.bpmView);
 		Integer bpm = Integer.valueOf(bpmView.getText().toString()) + 1;
 		bpmView.setText(bpm.toString());
@@ -48,6 +55,7 @@ public class RhythmActivity extends Activity {
 	}
 
 	public void decreaseBpm(View view) {
+		vibrate();
 		TextView bpmView = (TextView) findViewById(R.id.bpmView);
 		Integer bpm = Integer.valueOf(bpmView.getText().toString()) - 1;
 		bpmView.setText(bpm.toString());		
@@ -106,5 +114,9 @@ public class RhythmActivity extends Activity {
 		
 		TextView startStopButton = (TextView) findViewById(R.id.start_stop_button);
 		startStopButton.setTypeface(font);
+	}
+	
+	private void vibrate() {
+		vibes.vibrate(50);
 	}
 }

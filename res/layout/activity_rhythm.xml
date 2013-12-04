@@ -35,19 +35,6 @@
         android:textSize="@dimen/change_bpm_text_size" />
 
     <Button
-        android:id="@+id/increase_bpm_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/bpmView"
-        android:layout_alignParentTop="true"
-        android:background="@color/backgroundColor"
-        android:gravity="center_horizontal"
-        android:onClick="increaseBpm"
-        android:text="@string/increase_bpm"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/change_bpm_text_size" />
-
-    <Button
         android:id="@+id/start_stop_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -60,5 +47,18 @@
         android:text="@string/start"
         android:textColor="@color/textColor"
         android:textSize="@dimen/start_stop_text_size" />
+
+    <Button
+        android:id="@+id/increase_bpm_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bpmView"
+        android:layout_alignParentTop="true"
+        android:background="@color/backgroundColor"
+        android:gravity="center_horizontal"
+        android:onClick="increaseBpm"
+        android:text="@string/increase_bpm"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/change_bpm_text_size" />
 
 </RelativeLayout>
