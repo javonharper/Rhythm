@@ -20,7 +20,6 @@ public class RhythmActivity extends Activity {
 	MediaPlayer player = null;
 	Vibrator vibes;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		player = MediaPlayer.create(getApplicationContext(), R.raw.woodblock);
@@ -28,11 +27,21 @@ public class RhythmActivity extends Activity {
 		setContentView(R.layout.activity_rhythm);
 		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
+		active = false;
 		initializeFonts();
+	}
+
+	protected void onDestroy() {
+		if (timer != null) {
+			timer.cancel();
+		}
+		active = false;
+
+		super.onDestroy();
 	}
 
 	public void toggleMetronome(View view) {
@@ -58,20 +67,20 @@ public class RhythmActivity extends Activity {
 		vibrate();
 		TextView bpmView = (TextView) findViewById(R.id.bpmView);
 		Integer bpm = Integer.valueOf(bpmView.getText().toString()) - 1;
-		bpmView.setText(bpm.toString());		
+		bpmView.setText(bpm.toString());
 		restartMetronome();
 	}
-	
+
 	private void restartMetronome() {
 		if (active) {
 			stopMetronome();
 			startMetronome();
-		}	
+		}
 	}
 
 	private void startMetronome() {
 		active = true;
-		
+
 		long interval = getBpmInterval();
 		timer = new Timer("metronome", true);
 		timer.scheduleAtFixedRate(new TimerTask() {
@@ -85,7 +94,7 @@ public class RhythmActivity extends Activity {
 
 	private void stopMetronome() {
 		active = false;
-		
+
 		if (timer != null) {
 			timer.cancel();
 		}
@@ -104,18 +113,18 @@ public class RhythmActivity extends Activity {
 		TextView bpmTextView = (TextView) findViewById(R.id.bpmView);
 		return Long.parseLong((String) bpmTextView.getText());
 	}
-	
+
 	private void initializeFonts() {
 		Typeface font = Typeface.createFromAsset(getAssets(),
 				"SourceSansPro-Light.ttf");
 
 		TextView bpmView = (TextView) findViewById(R.id.bpmView);
 		bpmView.setTypeface(font);
-		
+
 		TextView startStopButton = (TextView) findViewById(R.id.start_stop_button);
 		startStopButton.setTypeface(font);
 	}
-	
+
 	private void vibrate() {
 		vibes.vibrate(50);
 	}

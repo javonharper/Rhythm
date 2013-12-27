@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/bpmView"
         android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/bpmView"
         android:background="@color/backgroundColor"
         android:gravity="center_horizontal"
         android:onClick="increaseBpm"
