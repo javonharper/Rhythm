@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentSender.OnFinished;
 import android.graphics.Typeface;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
@@ -38,13 +39,10 @@ public class RhythmActivity extends Activity {
 		initializeFonts();
 	}
 
-	protected void onDestroy() {
-		if (timer != null) {
-			timer.cancel();
-		}
-		active = false;
-
-		super.onDestroy();
+	@Override
+	protected void onStop() {
+		super.onStop();
+		stopMetronome();
 	}
 
 	public void toggleMetronome(View view) {
