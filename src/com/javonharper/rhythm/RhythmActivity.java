@@ -48,14 +48,22 @@ public class RhythmActivity extends Activity {
 	public void toggleMetronome(View view) {
 		vibrate();
 		if (active) {
-			changeButtonText("Start");
-			saturateBackground();
-			stopMetronome();
-		} else {
-			changeButtonText("Stop");
-			resetBackground();
 			startMetronome();
+		} else {
+			stopMetronome();
 		}
+	}
+
+	private void stopMetronome() {
+		changeButtonText("Stop");
+		resetBackground();
+		startMetronomeTimer();
+	}
+
+	private void startMetronome() {
+		changeButtonText("Start");
+		saturateBackground();
+		stopMetronomeTimer();
 	}
 
 	public void increaseBpm(View view) {
@@ -76,12 +84,12 @@ public class RhythmActivity extends Activity {
 
 	private void restartMetronome() {
 		if (active) {
-			stopMetronome();
-			startMetronome();
+			stopMetronomeTimer();
+			startMetronomeTimer();
 		}
 	}
 
-	private void startMetronome() {
+	private void startMetronomeTimer() {
 		active = true;
 
 		long interval = getBpmInterval();
@@ -95,7 +103,7 @@ public class RhythmActivity extends Activity {
 		}, 0, interval);
 	}
 
-	private void stopMetronome() {
+	private void stopMetronomeTimer() {
 		active = false;
 
 		if (timer != null) {
