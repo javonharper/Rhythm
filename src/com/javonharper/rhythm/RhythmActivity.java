@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -19,6 +20,8 @@ public class RhythmActivity extends Activity {
 	private long MILLISECONDS_IN_A_MINUTE = 60000L;
 	MediaPlayer player = null;
 	Vibrator vibes;
+	public static long START_TRANSITION_DURATION = 2000;
+	public static long END_TRANSITION_DURATION = START_TRANSITION_DURATION / 5;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +51,11 @@ public class RhythmActivity extends Activity {
 		vibrate();
 		if (active) {
 			changeButtonText("Start");
+			saturateBackground();
 			stopMetronome();
 		} else {
 			changeButtonText("Stop");
+			resetBackground();
 			startMetronome();
 		}
 	}
@@ -127,5 +132,19 @@ public class RhythmActivity extends Activity {
 
 	private void vibrate() {
 		vibes.vibrate(50);
+	}
+
+	private void saturateBackground() {
+		View view = (View) findViewById(R.id.appView);
+		TransitionDrawable background = (TransitionDrawable) view
+				.getBackground();
+		background.startTransition((int) START_TRANSITION_DURATION);
+	}
+	
+	private void resetBackground() {
+		View view = (View) findViewById(R.id.appView);
+		TransitionDrawable background = (TransitionDrawable) view
+				.getBackground();
+		background.reverseTransition((int) END_TRANSITION_DURATION);
 	}
 }
