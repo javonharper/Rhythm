@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res/com.javonharper.rhythm"
     android:id="@+id/appView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,35 +12,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".RhythmActivity" >
 
-    <TextView
-        android:id="@+id/bpmView"
-        android:layout_width="fill_parent"
+    <com.devadvance.circularseekbar.CircularSeekBar
+        android:id="@+id/bpmSeekbar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/increase_bpm_button"
-        android:gravity="center_horizontal"
-        android:text="@string/initial_bpm"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/bpm_text_size" />
-
-    <Button
-        android:id="@+id/decrease_bpm_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/start_stop_button"
-        android:layout_below="@+id/bpmView"
-        android:background="@android:color/transparent"
-        android:gravity="center_horizontal"
-        android:onClick="decreaseBpm"
-        android:text="@string/decrease_bpm"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/change_bpm_text_size" />
+        app:end_angle="70"
+        app:max="208"
+        app:progress="110"
+        app:start_angle="110" />
 
     <Button
         android:id="@+id/start_stop_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/bpmView"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         android:gravity="bottom|center_horizontal"
@@ -48,19 +33,5 @@
         android:text="@string/start"
         android:textColor="@color/textColor"
         android:textSize="@dimen/start_stop_text_size" />
-
-    <Button
-        android:id="@+id/increase_bpm_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/bpmView"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/bpmView"
-        android:background="@android:color/transparent"
-        android:gravity="center_horizontal"
-        android:onClick="increaseBpm"
-        android:text="@string/increase_bpm"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/change_bpm_text_size" />
 
 </RelativeLayout>

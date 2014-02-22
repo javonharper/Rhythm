@@ -5,7 +5,6 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.IntentSender.OnFinished;
 import android.graphics.Typeface;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
@@ -14,6 +13,8 @@ import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.devadvance.circularseekbar.CircularSeekBar;
 
 public class RhythmActivity extends Activity {
 	private boolean active = false;
@@ -66,25 +67,10 @@ public class RhythmActivity extends Activity {
 		stopMetronomeTimer();
 	}
 
-	public void increaseBpm(View view) {
-		vibrate();
-		TextView bpmView = (TextView) findViewById(R.id.bpmView);
-		Integer bpm = Integer.valueOf(bpmView.getText().toString()) + 1;
-		bpmView.setText(bpm.toString());
-		restartMetronome();
-	}
-
-	public void decreaseBpm(View view) {
-		vibrate();
-		TextView bpmView = (TextView) findViewById(R.id.bpmView);
-		Integer bpm = Integer.valueOf(bpmView.getText().toString()) - 1;
-		bpmView.setText(bpm.toString());
-		restartMetronome();
-	}
-
 	private void restartMetronome() {
 		if (active) {
 			stopMetronomeTimer();
+			
 			startMetronomeTimer();
 		}
 	}
@@ -121,16 +107,14 @@ public class RhythmActivity extends Activity {
 	}
 
 	private long getBpm() {
-		TextView bpmTextView = (TextView) findViewById(R.id.bpmView);
-		return Long.parseLong((String) bpmTextView.getText());
+		return MILLISECONDS_IN_A_MINUTE;
+//		TextView bpmTextView = (TextView) findViewById(R.id.bpmView);
+//		return Long.parseLong((String) bpmTextView.getText());
 	}
 
 	private void initializeFonts() {
 		Typeface font = Typeface.createFromAsset(getAssets(),
 				"SourceSansPro-Light.ttf");
-
-		TextView bpmView = (TextView) findViewById(R.id.bpmView);
-		bpmView.setTypeface(font);
 
 		TextView startStopButton = (TextView) findViewById(R.id.start_stop_button);
 		startStopButton.setTypeface(font);
