@@ -16,8 +16,12 @@
         android:id="@+id/bpmSeekbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:circle_progress_color="#FFFFFF"
         app:end_angle="70"
         app:max="208"
+        app:pointer_color="#FFFFFF"
+        app:pointer_halo_color="#FFFFFF"
+        app:pointer_halo_color_ontouch="#FFFFFF"
         app:progress="110"
         app:start_angle="110" />
 
