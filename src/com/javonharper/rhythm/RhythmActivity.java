@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.devadvance.circularseekbar.CircularSeekBar;
+import com.devadvance.circularseekbar.CircularSeekBar.OnCircularSeekBarChangeListener;
 
 public class RhythmActivity extends Activity {
 	private boolean active = false;
@@ -24,6 +25,9 @@ public class RhythmActivity extends Activity {
 	Vibrator vibes;
 	public static long START_TRANSITION_DURATION = 2000;
 	public static long END_TRANSITION_DURATION = START_TRANSITION_DURATION / 5;
+	CircularSeekBar seekbar;
+	private Integer INITIAL_BPM = 110;
+	private Integer currentBpm = INITIAL_BPM;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,9 @@ public class RhythmActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rhythm);
 		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		seekbar = (CircularSeekBar) findViewById(R.id.bpmSeekbar);
+		seekbar.setOnSeekBarChangeListener(new CircleSeekBarListener());
+		changeBpmText(INITIAL_BPM.toString());
 	}
 
 	@Override
@@ -67,14 +74,6 @@ public class RhythmActivity extends Activity {
 		stopMetronomeTimer();
 	}
 
-	private void restartMetronome() {
-		if (active) {
-			stopMetronomeTimer();
-			
-			startMetronomeTimer();
-		}
-	}
-
 	private void startMetronomeTimer() {
 		active = true;
 
@@ -102,19 +101,25 @@ public class RhythmActivity extends Activity {
 		startStopButton.setText(text);
 	}
 
+	private void changeBpmText(String text) {
+		TextView bpmTextView = (TextView) findViewById(R.id.bpmTextView);
+		bpmTextView.setText(text);
+	}
+
 	private long getBpmInterval() {
 		return MILLISECONDS_IN_A_MINUTE / getBpm();
 	}
 
 	private long getBpm() {
-		return MILLISECONDS_IN_A_MINUTE;
-//		TextView bpmTextView = (TextView) findViewById(R.id.bpmView);
-//		return Long.parseLong((String) bpmTextView.getText());
+		return currentBpm;
 	}
 
 	private void initializeFonts() {
 		Typeface font = Typeface.createFromAsset(getAssets(),
 				"SourceSansPro-Light.ttf");
+
+		TextView bpmTextView = (TextView) findViewById(R.id.bpmTextView);
+		bpmTextView.setTypeface(font);
 
 		TextView startStopButton = (TextView) findViewById(R.id.start_stop_button);
 		startStopButton.setTypeface(font);
@@ -130,11 +135,31 @@ public class RhythmActivity extends Activity {
 				.getBackground();
 		background.startTransition((int) START_TRANSITION_DURATION);
 	}
-	
+
 	private void resetBackground() {
 		View view = (View) findViewById(R.id.appView);
 		TransitionDrawable background = (TransitionDrawable) view
 				.getBackground();
 		background.reverseTransition((int) END_TRANSITION_DURATION);
+	}
+
+	public class CircleSeekBarListener implements
+			OnCircularSeekBarChangeListener {
+		@Override
+		public void onStopTrackingTouch(CircularSeekBar seekBar) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onStartTrackingTouch(CircularSeekBar seekBar) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onProgressChanged(CircularSeekBar circularSeekBar,
+				int progress, boolean fromUser) {
+			changeBpmText(Integer.toString(progress));
+		}
 	}
 }
