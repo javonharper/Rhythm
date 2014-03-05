@@ -26,9 +26,18 @@ public class RhythmActivity extends Activity {
 	public static long START_TRANSITION_DURATION = 2000;
 	public static long END_TRANSITION_DURATION = START_TRANSITION_DURATION / 5;
 	CircularSeekBar seekbar;
+	
+	// Settings for the bpm
 	private Integer INITIAL_BPM = 110;
-	private Integer currentBpm = INITIAL_BPM;
-
+	private Integer MINIMUM_BPM = 40;
+	private Integer MAXIMUM_BPM = 208;
+	
+	// Offsets for the progress bar
+	private Integer INITIAL_BPM_PROGRESS = INITIAL_BPM - MINIMUM_BPM;
+	private Integer MAXIMUM_BPM_PROGRESS = MAXIMUM_BPM - MINIMUM_BPM;
+	
+	private Integer currentBpm;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		player = MediaPlayer.create(getApplicationContext(), R.raw.woodblock);
@@ -36,8 +45,9 @@ public class RhythmActivity extends Activity {
 		setContentView(R.layout.activity_rhythm);
 		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		seekbar = (CircularSeekBar) findViewById(R.id.bpmSeekbar);
-		seekbar.setOnSeekBarChangeListener(new CircleSeekBarListener());
-		changeBpmText(INITIAL_BPM.toString());
+		seekbar.setOnSeekBarChangeListener(new CircleSeekBarListener());		
+		seekbar.setMax(MAXIMUM_BPM_PROGRESS);
+		updateBpm(INITIAL_BPM_PROGRESS);
 	}
 
 	@Override
@@ -113,6 +123,11 @@ public class RhythmActivity extends Activity {
 	private long getBpm() {
 		return currentBpm;
 	}
+	
+	private void updateBpm(int progressValue) {
+		currentBpm = progressValue + MINIMUM_BPM;
+		changeBpmText(Integer.toString(currentBpm));
+	}
 
 	private void initializeFonts() {
 		Typeface font = Typeface.createFromAsset(getAssets(),
@@ -159,7 +174,7 @@ public class RhythmActivity extends Activity {
 		@Override
 		public void onProgressChanged(CircularSeekBar circularSeekBar,
 				int progress, boolean fromUser) {
-			changeBpmText(Integer.toString(progress));
+				updateBpm(progress);
 		}
 	}
 }
