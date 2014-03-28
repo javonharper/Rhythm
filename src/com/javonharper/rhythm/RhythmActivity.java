@@ -18,7 +18,7 @@ import com.devadvance.circularseekbar.CircularSeekBar;
 import com.devadvance.circularseekbar.CircularSeekBar.OnCircularSeekBarChangeListener;
 
 public class RhythmActivity extends Activity {
-	private boolean active = false;
+	private boolean metronomeActive = false;
 	private Timer timer = null;
 	private long MILLISECONDS_IN_A_MINUTE = 60000L;
 	MediaPlayer player = null;
@@ -26,35 +26,30 @@ public class RhythmActivity extends Activity {
 	public static long START_TRANSITION_DURATION = 2000;
 	public static long END_TRANSITION_DURATION = START_TRANSITION_DURATION / 5;
 	CircularSeekBar seekbar;
-	
+
 	// Settings for the bpm
-	private Integer INITIAL_BPM = 110;
 	private Integer MINIMUM_BPM = 40;
 	private Integer MAXIMUM_BPM = 208;
-	
+	private Integer INITIAL_BPM = 110;
+
 	// Offsets for the progress bar
 	private Integer INITIAL_BPM_PROGRESS = INITIAL_BPM - MINIMUM_BPM;
 	private Integer MAXIMUM_BPM_PROGRESS = MAXIMUM_BPM - MINIMUM_BPM;
-	
+
 	private Integer currentBpm;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		player = MediaPlayer.create(getApplicationContext(), R.raw.woodblock);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rhythm);
-		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		seekbar = (CircularSeekBar) findViewById(R.id.bpmSeekbar);
-		seekbar.setOnSeekBarChangeListener(new CircleSeekBarListener());		
-		seekbar.setMax(MAXIMUM_BPM_PROGRESS);
-		updateBpm(INITIAL_BPM_PROGRESS);
+		initialize();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		active = false;
-		initializeFonts();
+		metronomeActive = false;
 	}
 
 	@Override
@@ -63,29 +58,54 @@ public class RhythmActivity extends Activity {
 		stopMetronome();
 	}
 
+	private void initialize() {
+		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		initializeSeekbar();
+		initializeFonts();
+	}
+
+	private void initializeSeekbar() {
+		seekbar = (CircularSeekBar) findViewById(R.id.bpmSeekbar);
+		seekbar.setOnSeekBarChangeListener(new CircleSeekBarListener());
+		seekbar.setProgress(INITIAL_BPM_PROGRESS);
+		seekbar.setMax(MAXIMUM_BPM_PROGRESS);
+		updateBpm(INITIAL_BPM_PROGRESS);
+	}
+
+	private void initializeFonts() {
+		Typeface font = Typeface.createFromAsset(getAssets(),
+				"SourceSansPro-Light.ttf");
+
+		TextView bpmTextView = (TextView) findViewById(R.id.bpmTextView);
+		bpmTextView.setTypeface(font);
+
+		TextView startStopButton = (TextView) findViewById(R.id.start_stop_button);
+		startStopButton.setTypeface(font);
+	}
+
 	public void toggleMetronome(View view) {
 		vibrate();
-		if (active) {
-			startMetronome();
-		} else {
+		if (metronomeActive) {
 			stopMetronome();
+		} else {
+			startMetronome();
 		}
 	}
 
-	private void stopMetronome() {
+	private void startMetronome() {
 		changeButtonText("Stop");
-		resetBackground();
 		startMetronomeTimer();
+		saturateBackground();
 	}
 
-	private void startMetronome() {
+	private void stopMetronome() {
 		changeButtonText("Start");
-		saturateBackground();
 		stopMetronomeTimer();
+		resetBackground();
 	}
 
 	private void startMetronomeTimer() {
-		active = true;
+		metronomeActive = true;
 
 		long interval = getBpmInterval();
 		timer = new Timer("metronome", true);
@@ -99,7 +119,7 @@ public class RhythmActivity extends Activity {
 	}
 
 	private void stopMetronomeTimer() {
-		active = false;
+		metronomeActive = false;
 
 		if (timer != null) {
 			timer.cancel();
@@ -127,17 +147,15 @@ public class RhythmActivity extends Activity {
 	private void updateBpm(int progressValue) {
 		currentBpm = progressValue + MINIMUM_BPM;
 		changeBpmText(Integer.toString(currentBpm));
+		
+		if(metronomeActive) {
+			restartMetronomeTimer();
+		}
 	}
 
-	private void initializeFonts() {
-		Typeface font = Typeface.createFromAsset(getAssets(),
-				"SourceSansPro-Light.ttf");
-
-		TextView bpmTextView = (TextView) findViewById(R.id.bpmTextView);
-		bpmTextView.setTypeface(font);
-
-		TextView startStopButton = (TextView) findViewById(R.id.start_stop_button);
-		startStopButton.setTypeface(font);
+	private void restartMetronomeTimer() {
+		stopMetronomeTimer();
+		startMetronomeTimer();
 	}
 
 	private void vibrate() {
@@ -174,7 +192,7 @@ public class RhythmActivity extends Activity {
 		@Override
 		public void onProgressChanged(CircularSeekBar circularSeekBar,
 				int progress, boolean fromUser) {
-				updateBpm(progress);
+			updateBpm(progress);
 		}
 	}
 }
