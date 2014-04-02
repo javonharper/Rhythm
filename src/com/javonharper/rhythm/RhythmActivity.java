@@ -28,7 +28,7 @@ public class RhythmActivity extends Activity {
 	CircularSeekBar seekbar;
 
 	// Settings for the bpm
-	private Integer MINIMUM_BPM = 40;
+	private Integer MINIMUM_BPM = 62;
 	private Integer MAXIMUM_BPM = 208;
 	private Integer INITIAL_BPM = 110;
 
