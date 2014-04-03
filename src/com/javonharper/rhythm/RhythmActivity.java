@@ -1,13 +1,14 @@
 package com.javonharper.rhythm;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.FileDescriptor;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
@@ -19,28 +20,30 @@ import com.devadvance.circularseekbar.CircularSeekBar.OnCircularSeekBarChangeLis
 
 public class RhythmActivity extends Activity {
 	private boolean metronomeActive = false;
-	private Timer timer = null;
-	private long MILLISECONDS_IN_A_MINUTE = 60000L;
 	MediaPlayer player = null;
 	Vibrator vibes;
 	public static long START_TRANSITION_DURATION = 2000;
 	public static long END_TRANSITION_DURATION = START_TRANSITION_DURATION / 5;
 	CircularSeekBar seekbar;
 
-	// Settings for the bpm
-	private Integer MINIMUM_BPM = 62;
-	private Integer MAXIMUM_BPM = 208;
+	// Settings for the BPM
+	private Integer BPM_STEP = 5;
+	private Integer MINIMUM_BPM = 65;
+	private Integer MAXIMUM_BPM = 210;
 	private Integer INITIAL_BPM = 110;
 
 	// Offsets for the progress bar
-	private Integer INITIAL_BPM_PROGRESS = INITIAL_BPM - MINIMUM_BPM;
-	private Integer MAXIMUM_BPM_PROGRESS = MAXIMUM_BPM - MINIMUM_BPM;
+	private Integer INITIAL_BPM_PROGRESS = (INITIAL_BPM - MINIMUM_BPM)
+			/ BPM_STEP;
+	private Integer MAXIMUM_BPM_PROGRESS = (MAXIMUM_BPM - MINIMUM_BPM)
+			/ BPM_STEP;
 
 	private Integer currentBpm;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		player = MediaPlayer.create(getApplicationContext(), R.raw.woodblock);
+		player = MediaPlayer.create(getApplicationContext(), R.raw.bpm110);
+		player.setLooping(true);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rhythm);
 		initialize();
@@ -72,6 +75,90 @@ public class RhythmActivity extends Activity {
 		updateBpm(INITIAL_BPM_PROGRESS);
 	}
 
+	public void toggleMetronome(View view) {
+		vibrate();
+		if (metronomeActive) {
+			stopMetronome();
+		} else {
+			startMetronome();
+		}
+	}
+
+	private void startMetronome() {
+		metronomeActive = true;
+		changeButtonText("Stop");
+		startMetronomeAudio();
+		saturateBackground();
+	}
+
+	private void stopMetronome() {
+		metronomeActive = false;
+		changeButtonText("Start");
+		stopMetronomeAudio();
+		resetBackground();
+	}
+
+	private void vibrate() {
+		vibes.vibrate(50);
+	}
+
+	// Playing the metronome
+
+	private void startMetronomeAudio() {
+		player.start();
+	}
+
+	private void stopMetronomeAudio() {
+		player.stop();
+	}
+
+	private void updateBpm(int progressValue) {
+		currentBpm = (progressValue * BPM_STEP) + MINIMUM_BPM;
+		changeBpmText(Integer.toString(currentBpm));
+
+		try {
+			updateBpmTrack(currentBpm);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void updateBpmTrack(Integer bpm) throws IllegalArgumentException,
+			SecurityException, IllegalStateException, IOException {
+		String paddedBpm = String.format("%03d",
+				Integer.parseInt(bpm.toString()));
+		String filename = "raw/bpm" + paddedBpm;
+		int bpmTrackId = getResources().getIdentifier(filename, "raw",
+				getPackageName());
+
+		FileDescriptor fd = getResources().openRawResourceFd(bpmTrackId)
+				.getFileDescriptor();
+
+		player.reset();
+		player.setDataSource(fd);
+		player.setOnPreparedListener(new OnPreparedListener() {
+			
+			public void onPrepared(MediaPlayer mp) {
+				// TODO Auto-generated method stub
+				if (metronomeActive) {
+					mp.start();
+				}
+			}
+		});
+		player.prepare();
+	}
+
+	// View updating
 	private void initializeFonts() {
 		Typeface font = Typeface.createFromAsset(getAssets(),
 				"SourceSansPro-Light.ttf");
@@ -83,49 +170,6 @@ public class RhythmActivity extends Activity {
 		startStopButton.setTypeface(font);
 	}
 
-	public void toggleMetronome(View view) {
-		vibrate();
-		if (metronomeActive) {
-			stopMetronome();
-		} else {
-			startMetronome();
-		}
-	}
-
-	private void startMetronome() {
-		changeButtonText("Stop");
-		startMetronomeTimer();
-		saturateBackground();
-	}
-
-	private void stopMetronome() {
-		changeButtonText("Start");
-		stopMetronomeTimer();
-		resetBackground();
-	}
-
-	private void startMetronomeTimer() {
-		metronomeActive = true;
-
-		long interval = getBpmInterval();
-		timer = new Timer("metronome", true);
-		timer.scheduleAtFixedRate(new TimerTask() {
-
-			@Override
-			public void run() {
-				player.start();
-			}
-		}, 0, interval);
-	}
-
-	private void stopMetronomeTimer() {
-		metronomeActive = false;
-
-		if (timer != null) {
-			timer.cancel();
-		}
-	}
-
 	private void changeButtonText(String text) {
 		Button startStopButton = (Button) findViewById(R.id.start_stop_button);
 		startStopButton.setText(text);
@@ -134,32 +178,6 @@ public class RhythmActivity extends Activity {
 	private void changeBpmText(String text) {
 		TextView bpmTextView = (TextView) findViewById(R.id.bpmTextView);
 		bpmTextView.setText(text);
-	}
-
-	private long getBpmInterval() {
-		return MILLISECONDS_IN_A_MINUTE / getBpm();
-	}
-
-	private long getBpm() {
-		return currentBpm;
-	}
-	
-	private void updateBpm(int progressValue) {
-		currentBpm = progressValue + MINIMUM_BPM;
-		changeBpmText(Integer.toString(currentBpm));
-		
-		if(metronomeActive) {
-			restartMetronomeTimer();
-		}
-	}
-
-	private void restartMetronomeTimer() {
-		stopMetronomeTimer();
-		startMetronomeTimer();
-	}
-
-	private void vibrate() {
-		vibes.vibrate(50);
 	}
 
 	private void saturateBackground() {
@@ -181,7 +199,6 @@ public class RhythmActivity extends Activity {
 		@Override
 		public void onStopTrackingTouch(CircularSeekBar seekBar) {
 			// TODO Auto-generated method stub
-
 		}
 
 		@Override
@@ -192,6 +209,7 @@ public class RhythmActivity extends Activity {
 		@Override
 		public void onProgressChanged(CircularSeekBar circularSeekBar,
 				int progress, boolean fromUser) {
+			stopMetronome();
 			updateBpm(progress);
 		}
 	}
