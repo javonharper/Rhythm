@@ -1,6 +1,5 @@
 package com.javonharper.rhythm;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 
 import android.app.Activity;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
@@ -102,8 +100,9 @@ public class RhythmActivity extends Activity {
 		vibes.vibrate(50);
 	}
 
-	// Playing the metronome
-
+	/*
+	 * Methods for playing the metronome
+	 */
 	private void startMetronomeAudio() {
 		player.start();
 	}
@@ -141,24 +140,16 @@ public class RhythmActivity extends Activity {
 		int bpmTrackId = getResources().getIdentifier(filename, "raw",
 				getPackageName());
 
-		FileDescriptor fd = getResources().openRawResourceFd(bpmTrackId)
-				.getFileDescriptor();
-
 		player.reset();
-		player.setDataSource(fd);
-		player.setOnPreparedListener(new OnPreparedListener() {
-			
-			public void onPrepared(MediaPlayer mp) {
-				// TODO Auto-generated method stub
-				if (metronomeActive) {
-					mp.start();
-				}
-			}
-		});
-		player.prepare();
+		player = MediaPlayer.create(getApplicationContext(), bpmTrackId);
+		if (metronomeActive) {
+			player.start();
+		}
 	}
 
-	// View updating
+	/*
+	 * Methos for updating the View
+	 */
 	private void initializeFonts() {
 		Typeface font = Typeface.createFromAsset(getAssets(),
 				"SourceSansPro-Light.ttf");
@@ -209,7 +200,6 @@ public class RhythmActivity extends Activity {
 		@Override
 		public void onProgressChanged(CircularSeekBar circularSeekBar,
 				int progress, boolean fromUser) {
-			stopMetronome();
 			updateBpm(progress);
 		}
 	}
