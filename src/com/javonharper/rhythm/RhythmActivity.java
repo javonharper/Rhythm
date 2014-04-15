@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaPlayer;
@@ -18,7 +19,7 @@ import com.devadvance.circularseekbar.CircularSeekBar.OnCircularSeekBarChangeLis
 
 public class RhythmActivity extends Activity {
 	private boolean metronomeActive = false;
-	MediaPlayer player = null;
+	Intent metronomeService;
 	Vibrator vibes;
 	public static long START_TRANSITION_DURATION = 2000;
 	public static long END_TRANSITION_DURATION = START_TRANSITION_DURATION / 5;
@@ -40,8 +41,6 @@ public class RhythmActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		player = MediaPlayer.create(getApplicationContext(), R.raw.bpm110);
-		player.setLooping(true);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rhythm);
 		initialize();
@@ -104,11 +103,19 @@ public class RhythmActivity extends Activity {
 	 * Methods for playing the metronome
 	 */
 	private void startMetronomeAudio() {
-		player.start();
+		metronomeService = new Intent(this, MetronomeIntentService.class);
+		startService(metronomeService);
 	}
 
 	private void stopMetronomeAudio() {
-		player.stop();
+		stopService(metronomeService);
+	}
+
+	private void restartMetronome(int trackId) {
+		stopService(metronomeService);
+		if (metronomeActive) {
+			startMetronome();
+		}
 	}
 
 	private void updateBpm(int progressValue) {
@@ -118,16 +125,12 @@ public class RhythmActivity extends Activity {
 		try {
 			updateBpmTrack(currentBpm);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -140,15 +143,11 @@ public class RhythmActivity extends Activity {
 		int bpmTrackId = getResources().getIdentifier(filename, "raw",
 				getPackageName());
 
-		player.reset();
-		player = MediaPlayer.create(getApplicationContext(), bpmTrackId);
-		if (metronomeActive) {
-			player.start();
-		}
+		restartMetronome(bpmTrackId);
 	}
 
 	/*
-	 * Methos for updating the View
+	 * Methods for updating the View
 	 */
 	private void initializeFonts() {
 		Typeface font = Typeface.createFromAsset(getAssets(),
@@ -189,12 +188,12 @@ public class RhythmActivity extends Activity {
 			OnCircularSeekBarChangeListener {
 		@Override
 		public void onStopTrackingTouch(CircularSeekBar seekBar) {
-			// TODO Auto-generated method stub
+
 		}
 
 		@Override
 		public void onStartTrackingTouch(CircularSeekBar seekBar) {
-			// TODO Auto-generated method stub
+
 		}
 
 		@Override
