@@ -111,8 +111,9 @@ public class RhythmActivity extends Activity {
 	}
 
 	private void restartMetronome(int trackId) {
-		stopService(metronomeService);
 		if (metronomeActive) {
+			stopService(metronomeService);
+
 			startMetronome();
 		}
 	}
