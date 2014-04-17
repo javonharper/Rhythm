@@ -48,7 +48,6 @@ public class RhythmActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		metronomeActive = false;
 	}
 
 	@Override
@@ -57,6 +56,7 @@ public class RhythmActivity extends Activity {
 	}
 
 	private void initialize() {
+		metronomeActive = false;
 		player = MediaPlayer.create(getApplicationContext(), R.raw.bpm110);
 		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		initializeSeekbar();
@@ -106,7 +106,7 @@ public class RhythmActivity extends Activity {
 	}
 
 	private void stopMetronomeAudio() {
-		player.stop();
+		player.pause();
 	}
 
 	private void restartMetronome(int trackId) {
