@@ -6,7 +6,7 @@ Rhythm
 Features
 ----
 
-★ Simple and intuitive controls.
-★ Visual and tactile feedback.
+* Simple and intuitive controls.
+* Visual and tactile feedback.
 
 [View the Product Page](https://play.google.com/store/apps/details?id=com.javonharper.rhythm)
