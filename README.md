@@ -1,3 +1,3 @@
-Tempo
+Rhythm
 =====
-Tempo is a metronome for Android.
+Rhythm is a metronome for Android.

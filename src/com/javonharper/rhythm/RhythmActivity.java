@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.TransitionDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
@@ -18,7 +18,7 @@ import com.devadvance.circularseekbar.CircularSeekBar.OnCircularSeekBarChangeLis
 
 public class RhythmActivity extends Activity {
 	private boolean metronomeActive = false;
-	Intent metronomeService;
+	private MediaPlayer player;
 	Vibrator vibes;
 	public static long START_TRANSITION_DURATION = 2000;
 	public static long END_TRANSITION_DURATION = START_TRANSITION_DURATION / 5;
@@ -54,10 +54,10 @@ public class RhythmActivity extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		stopMetronome();
 	}
 
 	private void initialize() {
+		player = MediaPlayer.create(getApplicationContext(), R.raw.bpm110);
 		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		initializeSeekbar();
 		initializeFonts();
@@ -102,19 +102,19 @@ public class RhythmActivity extends Activity {
 	 * Methods for playing the metronome
 	 */
 	private void startMetronomeAudio() {
-		metronomeService = new Intent(this, MetronomeIntentService.class);
-		startService(metronomeService);
+		player.start();
 	}
 
 	private void stopMetronomeAudio() {
-		stopService(metronomeService);
+		player.stop();
 	}
 
 	private void restartMetronome(int trackId) {
-		if (metronomeActive) {
-			stopService(metronomeService);
+		player.reset();
+		player = MediaPlayer.create(getApplicationContext(), trackId);
 
-			startMetronome();
+		if (metronomeActive) {
+			player.start();
 		}
 	}
 
