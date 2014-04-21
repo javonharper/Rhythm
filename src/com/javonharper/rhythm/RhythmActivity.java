@@ -58,6 +58,7 @@ public class RhythmActivity extends Activity {
 	private void initialize() {
 		metronomeActive = false;
 		player = MediaPlayer.create(getApplicationContext(), R.raw.bpm110);
+		player.setLooping(true);
 		vibes = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		initializeSeekbar();
 		initializeFonts();
@@ -112,6 +113,7 @@ public class RhythmActivity extends Activity {
 	private void restartMetronome(int trackId) {
 		player.reset();
 		player = MediaPlayer.create(getApplicationContext(), trackId);
+		player.setLooping(true);
 
 		if (metronomeActive) {
 			player.start();
