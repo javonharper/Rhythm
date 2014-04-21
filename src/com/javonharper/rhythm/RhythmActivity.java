@@ -158,6 +158,9 @@ public class RhythmActivity extends Activity {
 
 		TextView startStopButton = (TextView) findViewById(R.id.start_stop_button);
 		startStopButton.setTypeface(font);
+		
+		TextView bpmLabel = (TextView) findViewById(R.id.bpmLabelTextView);
+		bpmLabel.setTypeface(font);
 	}
 
 	private void changeButtonText(String text) {
